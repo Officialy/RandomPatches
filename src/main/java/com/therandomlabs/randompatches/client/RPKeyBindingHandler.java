@@ -25,16 +25,13 @@ package com.therandomlabs.randompatches.client;
 
 import java.util.List;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.therandomlabs.randompatches.RPConfig;
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.client.AbstractOption;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.IngameMenuScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.WithNarratorSettingsScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
+import net.minecraft.client.Option;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
@@ -55,43 +52,43 @@ public final class RPKeyBindingHandler {
 		/**
 		 * The secondary sprint key binding.
 		 */
-		public static final KeyBinding SECONDARY_SPRINT = new KeyBinding(
+		public static final KeyMapping SECONDARY_SPRINT = new KeyMapping(
 				"key.secondarySprint", GLFW.GLFW_KEY_W, "key.categories.movement"
 		);
 
 		/**
 		 * The dismount key binding.
 		 */
-		public static final KeyBinding DISMOUNT = new KeyBinding(
+		public static final KeyMapping DISMOUNT = new KeyMapping(
 				"key.dismount", GLFW.GLFW_KEY_LEFT_SHIFT, "key.categories.gameplay"
 		);
 
 		/**
 		 * The narrator toggle key binding.
 		 */
-		public static final KeyBinding TOGGLE_NARRATOR = new KeyBinding(
+		public static final KeyMapping TOGGLE_NARRATOR = new KeyMapping(
 				"key.narrator", ToggleNarratorKeyConflictContext.INSTANCE, KeyModifier.CONTROL,
-				InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.categories.misc"
+				InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.categories.misc"
 		);
 
 		/**
 		 * The pause key binding.
 		 */
-		public static final KeyBinding PAUSE = new KeyBinding(
+		public static final KeyMapping PAUSE = new KeyMapping(
 				"key.pause", GLFW.GLFW_KEY_ESCAPE, "key.categories.misc"
 		);
 
 		/**
 		 * The GUI toggle key binding.
 		 */
-		public static final KeyBinding TOGGLE_GUI = new KeyBinding(
+		public static final KeyMapping TOGGLE_GUI = new KeyMapping(
 				"key.gui", GLFW.GLFW_KEY_F1, "key.categories.misc"
 		);
 
 		/**
 		 * The debug key binding.
 		 */
-		public static final KeyBinding TOGGLE_DEBUG_INFO = new KeyBinding(
+		public static final KeyMapping TOGGLE_DEBUG_INFO = new KeyMapping(
 				"key.debugInfo", GLFW.GLFW_KEY_F3, "key.categories.misc"
 		);
 
@@ -115,49 +112,49 @@ public final class RPKeyBindingHandler {
 			if (config.toggleNarrator && action != GLFW.GLFW_RELEASE &&
 					TOGGLE_NARRATOR.isConflictContextAndModifierActive() &&
 					matches(TOGGLE_NARRATOR, key, scanCode)) {
-				AbstractOption.NARRATOR.func_216722_a(mc.gameSettings, 1);
+				Option.NARRATOR.createButton(mc.options, 1, 1, 1); //todo other two ints
 
-				if (mc.currentScreen instanceof WithNarratorSettingsScreen) {
-					((WithNarratorSettingsScreen) mc.currentScreen).updateNarratorButtonText();
+				if (mc.screen instanceof WithNarratorSettingsScreen) {
+					((WithNarratorSettingsScreen) mc.screen).updateNarratorButtonText();
 				}
 			}
 
 			if (config.pause && action != GLFW.GLFW_RELEASE && matches(PAUSE, key, scanCode)) {
-				if (mc.currentScreen == null) {
-					mc.displayInGameMenu(InputMappings.isKeyDown(
+				if (mc.screen == null) {
+					mc.displayInGameMenu(InputConstants.isKeyDown(
 							mc.getWindow().getHandle(), GLFW.GLFW_KEY_F3
 					));
-				} else if (mc.currentScreen instanceof IngameMenuScreen) {
-					mc.currentScreen.onClose();
+				} else if (mc.screen instanceof IngameMenuScreen) {
+					mc.screen.onClose();
 				}
 			}
 
-			if (mc.currentScreen != null && !mc.currentScreen.passEvents) {
+			if (mc.screen != null && !mc.screen.passEvents) {
 				return;
 			}
 
 			if (config.toggleGUI && action != GLFW.GLFW_RELEASE &&
 					matches(TOGGLE_GUI, key, scanCode)) {
-				mc.gameSettings.hideGUI = !mc.gameSettings.hideGUI;
+				mc.options.hideGui = !mc.options.hideGui;
 			}
 
 			if (config.toggleDebugInfo && action == GLFW.GLFW_RELEASE &&
 					matches(TOGGLE_DEBUG_INFO, key, scanCode)) {
-				if (TOGGLE_DEBUG_INFO.getKey().getType() == InputMappings.Type.KEYSYM &&
+				if (TOGGLE_DEBUG_INFO.getKey().getType() == InputConstants.Type.KEYSYM &&
 						TOGGLE_DEBUG_INFO.getKey().getKeyCode() == GLFW.GLFW_KEY_F3 &&
 						mc.keyboardListener.actionKeyF3) {
 					mc.keyboardListener.actionKeyF3 = false;
 				} else {
-					mc.gameSettings.showDebugInfo = !mc.gameSettings.showDebugInfo;
-					mc.gameSettings.showDebugProfilerChart =
-							mc.gameSettings.showDebugInfo && Screen.hasShiftDown();
-					mc.gameSettings.showLagometer =
-							mc.gameSettings.showDebugInfo && Screen.hasAltDown();
+					mc.options.renderDebug = !mc.options.renderDebug;
+					mc.options.renderDebugCharts =
+							mc.options.renderDebug && Screen.hasShiftDown();
+					mc.options.renderFpsChart =
+							mc.options.renderDebug && Screen.hasAltDown();
 				}
 			}
 		}
 
-		private static boolean matches(KeyBinding keyBinding, int key, int scanCode) {
+		private static boolean matches(KeyMapping keyBinding, int key, int scanCode) {
 			return scanCode == Integer.MIN_VALUE ?
 					keyBinding.matchesMouseKey(key) : keyBinding.matchesKey(key, scanCode);
 		}
@@ -177,18 +174,18 @@ public final class RPKeyBindingHandler {
 			}
 		}
 
-		private static void register(KeyBinding keyBinding, boolean enabled) {
+		private static void register(KeyMapping keyBinding, boolean enabled) {
 			if (enabled) {
-				if (!ArrayUtils.contains(mc.gameSettings.keyBindings, keyBinding)) {
-					mc.gameSettings.keyBindings =
-							ArrayUtils.add(mc.gameSettings.keyBindings, keyBinding);
+				if (!ArrayUtils.contains(mc.options.keyBindings, keyBinding)) {
+					mc.options.keyBindings =
+							ArrayUtils.add(mc.options.keyBindings, keyBinding);
 				}
 			} else {
-				final int index = ArrayUtils.indexOf(mc.gameSettings.keyBindings, keyBinding);
+				final int index = ArrayUtils.indexOf(mc.options.keyBindings, keyBinding);
 
 				if (index != ArrayUtils.INDEX_NOT_FOUND) {
-					mc.gameSettings.keyBindings =
-							ArrayUtils.remove(mc.gameSettings.keyBindings, index);
+					mc.options.keyBindings =
+							ArrayUtils.remove(mc.options.keyBindings, index);
 				}
 			}
 		}
@@ -200,7 +197,7 @@ public final class RPKeyBindingHandler {
 
 		@Override
 		public boolean isActive() {
-			final Screen screen = KeyBindings.mc.currentScreen;
+			final Screen screen = KeyBindings.mc.screen;
 			return screen == null || !(screen.getFocused() instanceof TextFieldWidget) ||
 					!((TextFieldWidget) screen.getFocused()).func_212955_f();
 		}

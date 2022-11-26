@@ -27,8 +27,9 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.command.CommandSource;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.TextComponent;
 
 /**
  * The command that reloads the RandomPatches configuration.
@@ -41,21 +42,21 @@ public final class RPConfigReloadCommand {
 	 *
 	 * @param dispatcher the {@link CommandDispatcher}.
 	 */
-	public static void register(CommandDispatcher<CommandSource> dispatcher) {
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		final String name = RandomPatches.config().misc.configReloadCommand;
 
 		if (!name.isEmpty()) {
 			dispatcher.register(
-					LiteralArgumentBuilder.<CommandSource>literal(name).
-							requires(source -> source.hasPermissionLevel(4)).
+					LiteralArgumentBuilder.<CommandSourceStack>literal(name).
+							requires(source -> source.hasPermission(4)).
 							executes(context -> execute(context.getSource()))
 			);
 		}
 	}
 
-	private static int execute(CommandSource source) {
+	private static int execute(CommandSourceStack source) {
 		RandomPatches.reloadConfig();
-		source.sendFeedback(new StringTextComponent("RandomPatches configuration reloaded!"), true);
+		source.sendSuccess(new TextComponent("RandomPatches configuration reloaded!"), true);
 		return Command.SINGLE_SUCCESS;
 	}
 }

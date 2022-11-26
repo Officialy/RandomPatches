@@ -35,10 +35,8 @@ import java.util.UUID;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.network.play.server.SPlayerListItemPacket;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -76,32 +74,32 @@ public final class RPContributorCapeHandler {
 			return;
 		}
 
-		final AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) event.getPlayer();
+		final AbstractClientPlayer player = (AbstractClientPlayer) event.getPlayer();
 
-		if (FMLEnvironment.production && !contributors.contains(player.getCachedUniqueIdString())) {
+		if (FMLEnvironment.production && !contributors.contains(player.getStringUUID())) {
 			return;
 		}
 
-		if (player.getPlayerInfo() == null) {
+		/*todo if (player.getPlayerInfo() == null) {
 			player.playerInfo = new NetworkPlayerInfo(new SPlayerListItemPacket().new AddPlayerData(
 					player.getGameProfile(), 0, null, null
 			));
-			temporaryPlayerInfos.add(player.getUniqueID());
+			temporaryPlayerInfos.add(player.getUUID());
 		}
 
 		player.playerInfo.playerTextures.putIfAbsent(MinecraftProfileTexture.Type.CAPE, CAPE);
-		player.playerInfo.playerTextures.putIfAbsent(MinecraftProfileTexture.Type.ELYTRA, CAPE);
+		player.playerInfo.playerTextures.putIfAbsent(MinecraftProfileTexture.Type.ELYTRA, CAPE);*/
 	}
 
 	@SubscribeEvent
 	public static void onPostRenderPlayer(RenderPlayerEvent.Post event) {
-		final AbstractClientPlayerEntity player = (AbstractClientPlayerEntity) event.getPlayer();
-		final UUID uniqueID = player.getUniqueID();
+		final AbstractClientPlayer player = (AbstractClientPlayer) event.getPlayer();
+		final UUID uniqueID = player.getUUID();
 
-		if (temporaryPlayerInfos.contains(uniqueID)) {
+		/*todo if (temporaryPlayerInfos.contains(uniqueID)) {
 			player.playerInfo = null;
 			temporaryPlayerInfos.remove(uniqueID);
-		}
+		}*/
 	}
 
 	/**

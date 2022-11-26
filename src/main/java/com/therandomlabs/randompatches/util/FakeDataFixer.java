@@ -34,7 +34,7 @@ import com.mojang.datafixers.types.Type;
 import com.mojang.datafixers.types.templates.TaggedChoice;
 import com.mojang.datafixers.types.templates.TypeTemplate;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.util.SharedConstants;
+import net.minecraft.SharedConstants;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -43,7 +43,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class FakeDataFixer implements DataFixer {
 	private static final class FakeSchema extends Schema {
 		FakeSchema() {
-			super(SharedConstants.getVersion().getWorldVersion(), null);
+			super(SharedConstants.getCurrentVersion().getDataVersion().getVersion(), null);
 		}
 
 		@Override

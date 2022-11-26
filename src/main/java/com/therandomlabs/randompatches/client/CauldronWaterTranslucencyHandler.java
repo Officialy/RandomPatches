@@ -24,9 +24,8 @@
 package com.therandomlabs.randompatches.client;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -34,31 +33,28 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
  * Handles the fix for water in cauldrons rendering as opaque.
  */
 public final class CauldronWaterTranslucencyHandler {
-	private static boolean enabled;
+    private static boolean enabled;
 
-	private CauldronWaterTranslucencyHandler() {}
+    private CauldronWaterTranslucencyHandler() {
+    }
 
-	/**
-	 * Enables this class's functionality if it has not already been enabled.
-	 */
-	public static void enable() {
-		if (FMLEnvironment.dist == Dist.CLIENT) {
-			enabled = true;
-			onConfigReload();
-		}
-	}
+    /**
+     * Enables this class's functionality if it has not already been enabled.
+     */
+    public static void enable() {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            enabled = true;
+            onConfigReload();
+        }
+    }
 
-	/**
-	 * Called by {@link com.therandomlabs.randompatches.RPConfig.ClientBugFixes} when the
-	 * RandomPatches configuration is reloaded.
-	 */
-	public static void onConfigReload() {
-		if (FMLEnvironment.dist == Dist.CLIENT && enabled) {
-			RenderTypeLookup.setRenderLayer(
-					Blocks.CAULDRON,
-					RandomPatches.config().client.bugFixes.fixWaterInCauldronsRenderingAsOpaque ?
-							RenderType.getTranslucent() : RenderType.getSolid()
-			);
-		}
-	}
+    /**
+     * Called by {@link com.therandomlabs.randompatches.RPConfig.ClientBugFixes} when the
+     * RandomPatches configuration is reloaded.
+     */
+    public static void onConfigReload() {
+        if (FMLEnvironment.dist == Dist.CLIENT && enabled) {
+//            RenderTypeLookup.setRenderLayer(Blocks.CAULDRON, RandomPatches.config().client.bugFixes.fixWaterInCauldronsRenderingAsOpaque ? RenderType.getTranslucent() : RenderType.getSolid()); todo probably fixed in 1.18, double check
+        }
+    }
 }

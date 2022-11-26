@@ -1,115 +1,149 @@
-apply plugin: "java-library"
-
-version = "2.4.4-forge"
-group = "com.therandomlabs.randompatches"
-archivesBaseName = "randompatches"
-
-ext {
-	commonGradleBranch = "master"
-	useMixin = true
-	minecraftVersion = "1.16.5"
-	forgeVersion = "36.0.4"
-	mappingsChannel = "snapshot"
-	mappingsVersion = "20210126-mixed-1.16.5"
-	clothConfigVersion = "4.1.3"
-	autoConfigVersion = "3.0"
-	autoConfigTOMLVersion = "autoconfig-3.x.x-forge-SNAPSHOT"
+plugins {
+    id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-buildscript {
-	repositories {
-		jcenter()
 
-		mavenCentral()
+group = 'com.therandomlabs.randompatches'
+version = '3.4.4-forge' //bump major version for 1.18 release
 
-		gradlePluginPortal()
-
-		maven {
-			url "http://files.minecraftforge.net/maven"
-		}
-
-		maven {
-			url "https://dist.creeper.host/Sponge/maven"
-		}
-	}
-
-	dependencies {
-		classpath group: "net.minecraftforge.gradle", name: "ForgeGradle",
-				version: "3.+", changing: true
-		classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
-		classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
-		classpath "gradle.plugin.com.modrinth.minotaur:Minotaur:1.1.0"
-		classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
-	}
+java {
+    archivesBaseName = 'randompatches'
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
-apply from: "https://raw.githubusercontent.com/TheRandomLabs/Common-Gradle/${project.commonGradleBranch}/forge.gradle"
+minecraft {
+    // The mappings can be changed at any time and must be in the following format.
+    // Channel:   Version:
+    // official   MCVersion             Official field/method names from Mojang mapping files
+    // parchment  YYYY.MM.DD-MCVersion  Open community-sourced parameter names and javadocs layered on top of official
+    //
+    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
+    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+    //
+    // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
+    // Additional setup is needed to use their mappings: https://github.com/ParchmentMC/Parchment/wiki/Getting-Started
+    //
+    // Use non-default mappings at your own risk. They may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'official', version: '1.18.2'
 
-if (project.hasProperty("curseForgeAPIKey")) {
-	curseforge {
-		apiKey = project.curseForgeAPIKey
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-		project {
-			id = "285612"
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run')
 
-			addGameVersion "Forge"
-			addGameVersion "Java 10"
-			addGameVersion "Java 9"
-			addGameVersion "Java 8"
-			addGameVersion "1.16.5"
-			addGameVersion "1.16.4"
-			addGameVersion "1.16.3"
-			addGameVersion "1.16.2"
-			addGameVersion "1.16.1"
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
 
-			mainArtifact(jar) {
-				changelogType = "markdown"
-				changelog = file("changelog.md")
-				displayName = "RandomPatches ${version}"
-				releaseType = "beta"
 
-				relations {
-					optionalDependency "cloth-config-forge"
-				}
-			}
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
 
-			addArtifact(deobfJar) {
-				displayName = "RandomPatches ${version} Deobf"
-				releaseType = "release"
-			}
+            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'forge.enabledGameTestNamespaces', 'antiblock'
 
-			addArtifact(sourcesJar) {
-				displayName = "RandomPatches ${version} Sources"
-				releaseType = "release"
-			}
+            mods {
+                antiblock {
+                    source sourceSets.main
+                }
+            }
+        }
 
-			addArtifact(javadocJar) {
-				displayName = "RandomPatches ${version} Javadoc"
-				releaseType = "release"
-			}
-		}
-	}
+        server {
+            workingDirectory project.file('run')
 
-	tasks.curseforge.dependsOn build
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', 'antiblock'
+
+            mods {
+                antiblock {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        // This run config launches GameTestServer and runs all registered gametests, then exits.
+        // By default, the server will crash when no gametests are provided.
+        // The gametest system is also enabled by default for other run configs under the /test command.
+        gameTestServer {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            property 'forge.enabledGameTestNamespaces', 'antiblock'
+
+            mods {
+                antiblock {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', 'antiblock', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                antiblock {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
-if (project.hasProperty("modrinthToken")) {
-	task publishModrinth(type: com.modrinth.minotaur.TaskModrinthUpload) {
-		token = project.modrinthToken
-		projectId = "JmtW1Cr5"
-		versionNumber = version
-		versionName = "RandomPatches ${version}"
-		changelog = new File("changelog.md").getText()
-		uploadFile = jar
-		releaseType = "beta"
-		addGameVersion("1.16.5")
-		addGameVersion("1.16.4")
-		addGameVersion("1.16.3")
-		addGameVersion("1.16.2")
-		addGameVersion("1.16.1")
-		addLoader("forge")
-		addFile(deobfJar)
-		addFile(sourcesJar)
-		addFile(javadocJar)
-	}
+// Include resources generated by data generators.
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    maven {
+        url "https://maven.shedaniel.me/"
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.18.2-40.1.85'
+
+    implementation(fg.deobf("me.shedaniel.cloth:cloth-config-forge:6.4.90"))
+}
+
+// Example for how to get properties into the manifest for reading at runtime.
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "antiblock",
+                "Specification-Vendor"    : "Officialy",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "Officialy",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }

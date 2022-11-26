@@ -23,15 +23,14 @@
 
 package com.therandomlabs.randompatches;
 
-import com.therandomlabs.autoconfigtoml.TOMLConfigSerializer;
 import com.therandomlabs.randompatches.client.CauldronWaterTranslucencyHandler;
 import com.therandomlabs.randompatches.client.RPContributorCapeHandler;
 import com.therandomlabs.randompatches.client.RPKeyBindingHandler;
 import com.therandomlabs.randompatches.command.RPConfigReloadCommand;
-import me.shedaniel.autoconfig1u.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -57,7 +56,7 @@ public final class RandomPatches {
 
 	@SuppressWarnings("PMD.NonThreadSafesingleton")
 	@Nullable
-	private static TOMLConfigSerializer<RPConfig> serializer;
+	private static Toml4jConfigSerializer<RPConfig> serializer;
 
 	/**
 	 * Constructs a {@link RandomPatches} instance.
@@ -93,7 +92,7 @@ public final class RandomPatches {
 			reloadConfig();
 		}
 
-		return serializer.getConfig();
+		return serializer.createDefault(); //could be deserialize
 	}
 
 	/**
@@ -102,7 +101,7 @@ public final class RandomPatches {
 	public static void reloadConfig() {
 		if (serializer == null) {
 			AutoConfig.register(RPConfig.class, (definition, configClass) -> {
-				serializer = new TOMLConfigSerializer<>(definition, configClass);
+				serializer = new Toml4jConfigSerializer<>(definition, configClass);
 				return serializer;
 			});
 		} else {
