@@ -19,7 +19,8 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin;
 
@@ -62,10 +63,13 @@ public final class BoatEntityMixin {
         return newDelay == -1 ? Float.MAX_VALUE : newDelay;
     }
 
-   /* @Redirect(method = "updateFallState", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/item/BoatEntity;" +
+   */
+/* @Redirect(method = "updateFallState", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/item/BoatEntity;" +
             "status:Lnet/minecraft/entity/item/BoatEntity$Status;"))
     private Boat.Status getLocation(Boat boat) {
         return RandomPatches.config().misc.bugFixes.fixBoatFallDamage ?
                 Boat.Status.ON_LAND : status;
-    }*/
+    }*//*
+
 }
+*/

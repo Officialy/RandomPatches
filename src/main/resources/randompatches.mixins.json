@@ -6,7 +6,6 @@
 	"compatibilityLevel": "JAVA_8",
 	"refmap": "randompatches.refmap.json",
 	"mixins": [
-		"BoatEntityMixin",
 		"CompoundNBTMixin",
 		"packetsizelimits.NettyCompressionDecoderMixin",
 		"packetsizelimits.PacketBufferMixin",

@@ -69,7 +69,6 @@ public final class RandomPatches {
 //					ConfigGuiHandler.getGuiFactoryFor((screen) -> AutoConfig.getConfigScreen(RPConfig.class, screen).get())
 //			);
 		}
-		AutoConfig.register(RPConfig.class, Toml4jConfigSerializer::new);
 
 		CauldronWaterTranslucencyHandler.enable();
 		RPKeyBindingHandler.enable();
