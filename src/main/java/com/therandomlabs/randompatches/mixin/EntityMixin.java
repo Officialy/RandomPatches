@@ -19,22 +19,22 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CauldronBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.DoubleNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CauldronBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -46,10 +46,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public abstract class EntityMixin {
 	@Shadow
-	public abstract AxisAlignedBB getBoundingBox();
+	public abstract AABB getBoundingBox();
 
 	@Shadow
-	public abstract void setBoundingBox(AxisAlignedBB boundingBox);
+	public abstract void setBoundingBox(AABB boundingBox);
 
 	@Shadow
 	public abstract boolean isInWater();
@@ -58,13 +58,13 @@ public abstract class EntityMixin {
 	protected abstract boolean isInRain();
 
 	@Shadow
-	public World world;
+	public Level level;
 
 	@Shadow
 	public abstract BlockPos getBlockPos();
 
 	@Shadow
-	public abstract World getEntityWorld();
+	public abstract Level getEntityWorld();
 
 	@Inject(method = "isWet", at = @At("HEAD"), cancellable = true)
 	private void isWet(CallbackInfoReturnable<Boolean> info) {
@@ -73,20 +73,15 @@ public abstract class EntityMixin {
 		}
 	}
 
-	@Inject(method = "writeWithoutTypeId", at = @At(
-			value = "INVOKE",
-			target = "net/minecraft/entity/Entity.getMotion()" +
-					"Lnet/minecraft/util/math/vector/Vector3d;"
-	))
-	private void writeWithoutTypeId(
-			CompoundNBT compound, CallbackInfoReturnable<CompoundNBT> info
-	) {
+	@Inject(method = "writeWithoutTypeId", at = @At(value = "INVOKE", target = "net/minecraft/entity/Entity.getMotion()" +
+					"Lnet/minecraft/util/math/vector/Vector3d;"))
+	private void writeWithoutTypeId(CompoundTag compound, CallbackInfoReturnable<CompoundTag> info) {
 		if (!RandomPatches.config().misc.bugFixes.fixMC2025) {
 			return;
 		}
 
-		final AxisAlignedBB boundingBox = getBoundingBox();
-		final ListNBT boundingBoxList = new ListNBT();
+		final AABB boundingBox = getBoundingBox();
+		final ListTag boundingBoxList = new ListTag();
 
 		//Because of floating point precision errors, the bounding box of an entity can be
 		//calculated as smaller than the expected value. When the entity is saved then reloaded, the
@@ -94,25 +89,25 @@ public abstract class EntityMixin {
 		//To counter this, we store the bounding box when an entity is saved, then use the same
 		//bounding box when it is loaded.
 		//See: https://redd.it/8pgd4q
-		boundingBoxList.add(DoubleNBT.of(boundingBox.minX));
-		boundingBoxList.add(DoubleNBT.of(boundingBox.minY));
-		boundingBoxList.add(DoubleNBT.of(boundingBox.minZ));
-		boundingBoxList.add(DoubleNBT.of(boundingBox.maxX));
-		boundingBoxList.add(DoubleNBT.of(boundingBox.maxY));
-		boundingBoxList.add(DoubleNBT.of(boundingBox.maxZ));
+		boundingBoxList.add(DoubleTag.valueOf(boundingBox.minX));
+		boundingBoxList.add(DoubleTag.valueOf(boundingBox.minY));
+		boundingBoxList.add(DoubleTag.valueOf(boundingBox.minZ));
+		boundingBoxList.add(DoubleTag.valueOf(boundingBox.maxX));
+		boundingBoxList.add(DoubleTag.valueOf(boundingBox.maxY));
+		boundingBoxList.add(DoubleTag.valueOf(boundingBox.maxZ));
 
 		compound.put("BoundingBox", boundingBoxList);
 	}
 
 	@Inject(method = "read", at = @At("TAIL"))
-	private void read(CompoundNBT compound, CallbackInfo info) {
+	private void read(CompoundTag compound, CallbackInfo info) {
 		if (!RandomPatches.config().misc.bugFixes.fixMC2025 || !compound.contains("BoundingBox")) {
 			return;
 		}
 
-		final ListNBT boundingBoxList = compound.getList("BoundingBox", Constants.NBT.TAG_DOUBLE);
+		final ListTag boundingBoxList = compound.getList("BoundingBox", Constants.NBT.TAG_DOUBLE);
 
-		setBoundingBox(new AxisAlignedBB(
+		setBoundingBox(new AABB(
 				boundingBoxList.getDouble(0),
 				boundingBoxList.getDouble(1),
 				boundingBoxList.getDouble(2),
@@ -129,3 +124,4 @@ public abstract class EntityMixin {
 		return state.isIn(Blocks.CAULDRON) && state.get(CauldronBlock.LEVEL) > 0;
 	}
 }
+*/

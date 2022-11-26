@@ -24,9 +24,9 @@
 package com.therandomlabs.randompatches.mixin;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.BoatEntity;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,41 +36,36 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(BoatEntity.class)
+@Mixin(Boat.class)
 public final class BoatEntityMixin {
-	@Shadow
-	private BoatEntity.Status status;
+    @Shadow
+    private Boat.Status status;
 
-	@Shadow
-	private float outOfControlTicks;
+    @Shadow
+    private float outOfControlTicks;
 
-	@Inject(method = "tick", at = @At("TAIL"))
-	private void tick(CallbackInfo info) {
-		if (status == BoatEntity.Status.UNDER_FLOWING_WATER) {
-			final Vector3d motion = ((Entity) (Object) this).getMotion();
-			((Entity) (Object) this).setMotion(
-					motion.x,
-					motion.y + 0.0007 + RandomPatches.config().misc.boatBuoyancyUnderFlowingWater,
-					motion.z
-			);
-		}
-	}
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void tick(CallbackInfo info) {
+        if (status == Boat.Status.UNDER_FLOWING_WATER) {
+            final Vec3 motion = ((Entity) (Object) this).getDeltaMovement();
+            ((Entity) (Object) this).setDeltaMovement(
+                    motion.x,
+                    motion.y + 0.0007 + RandomPatches.config().misc.boatBuoyancyUnderFlowingWater,
+                    motion.z
+            );
+        }
+    }
 
-	@ModifyConstant(
-			method = {"tick", "processInitialInteract"}, constant = @Constant(floatValue = 60.0F)
-	)
-	private float getUnderwaterBoatPassengerEjectionDelay(float delay) {
-		final int newDelay = RandomPatches.config().misc.underwaterBoatPassengerEjectionDelayTicks;
-		return newDelay == -1 ? Float.MAX_VALUE : newDelay;
-	}
+    @ModifyConstant(method = {"tick", "interact"}, constant = @Constant(floatValue = 60.0F)) //was processInitialInteract
+    private float getUnderwaterBoatPassengerEjectionDelay(float delay) {
+        final int newDelay = RandomPatches.config().misc.underwaterBoatPassengerEjectionDelayTicks;
+        return newDelay == -1 ? Float.MAX_VALUE : newDelay;
+    }
 
-	@Redirect(method = "updateFallState", at = @At(
-			value = "FIELD",
-			target = "Lnet/minecraft/entity/item/BoatEntity;" +
-					"status:Lnet/minecraft/entity/item/BoatEntity$Status;"
-	))
-	private BoatEntity.Status getLocation(BoatEntity boat) {
-		return RandomPatches.config().misc.bugFixes.fixBoatFallDamage ?
-				BoatEntity.Status.ON_LAND : status;
-	}
+   /* @Redirect(method = "updateFallState", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/item/BoatEntity;" +
+            "status:Lnet/minecraft/entity/item/BoatEntity$Status;"))
+    private Boat.Status getLocation(Boat boat) {
+        return RandomPatches.config().misc.bugFixes.fixBoatFallDamage ?
+                Boat.Status.ON_LAND : status;
+    }*/
 }

@@ -19,18 +19,18 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin.client;
 
 import java.util.Random;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.math.Matrix4f;
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.client.renderer.tileentity.EndPortalTileEntityRenderer;
-import net.minecraft.tileentity.EndPortalTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.TheEndPortalBlockEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(EndPortalTileEntityRenderer.class)
+@Mixin(TheEndPortalRenderer.class)
 public abstract class EndPortalTileEntityRendererMixin {
 	@Shadow
 	@Final
@@ -48,17 +48,10 @@ public abstract class EndPortalTileEntityRendererMixin {
 	//CHECKSTYLE IGNORE MethodName FOR NEXT 3 LINES
 	@SuppressWarnings("PMD.MethodNamingConventions")
 	@Shadow
-	protected abstract void method_23085(
-			EndPortalTileEntity tileEntity, Matrix4f model, IVertexBuilder vertexBuilder,
-			float x1, float x2, float y1, float y2, float z1, float z2, float z3, float z4,
-			float r, float g, float b, Direction face
-	);
+	protected abstract void method_23085(TheEndPortalBlockEntity tileEntity, Matrix4f model, VertexBuilder vertexBuilder, float x1, float x2, float y1, float y2, float z1, float z2, float z3, float z4, float r, float g, float b, Direction face);
 
 	@Inject(method = "method_23084", at = @At("HEAD"), cancellable = true)
-	private void render(
-			EndPortalTileEntity tileEntity, float y, float colorMultiplier, Matrix4f model,
-			IVertexBuilder vertexBuilder, CallbackInfo info
-	) {
+	private void render(EndPortalTileEntityRendererMixin tileEntity, float y, float colorMultiplier, Matrix4f model, IVertexBuilder vertexBuilder, CallbackInfo info) {
 		if (!RandomPatches.config().client.bugFixes.fixEndPortalsOnlyRenderingFromAbove) {
 			return;
 		}
@@ -96,13 +89,11 @@ public abstract class EndPortalTileEntityRendererMixin {
 	}
 
 	@SuppressWarnings("UnresolvedMixinReference")
-	@Redirect(method = "method_23085", at = @At(
-			value = "INVOKE",
-			target = "net/minecraft/tileentity/EndPortalTileEntity.shouldRenderFace" +
-					"(Lnet/minecraft/util/Direction;)Z"
-	))
-	private boolean shouldRenderFace(EndPortalTileEntity tileEntity, Direction face) {
+	@Redirect(method = "method_23085", at = @At(value = "INVOKE", target = "net/minecraft/tileentity/EndPortalTileEntity.shouldRenderFace" +
+					"(Lnet/minecraft/util/Direction;)Z"))
+	private boolean shouldRenderFace(TheEndPortalBlockEntity tileEntity, Direction face) {
 		return RandomPatches.config().client.bugFixes.fixEndPortalsOnlyRenderingFromAbove ||
 				face == Direction.UP;
 	}
 }
+*/

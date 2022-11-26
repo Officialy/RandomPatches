@@ -19,37 +19,29 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(AnimalEntity.class)
+@Mixin(Animal.class)
 public final class AnimalEntityMixin {
-	@Redirect(method = "livingTick", at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/World;addParticle" +
-					"(Lnet/minecraft/particles/IParticleData;DDDDDD)V"
-	))
-	private void addParticle(
-			World world, IParticleData particleData, double x, double y, double z,
-			double xOffset, double yOffset, double zOffset
-	) {
-		if (!world.isRemote && RandomPatches.config().misc.bugFixes.fixAnimalBreedingHearts) {
-			//addParticle is not implemented in ServerWorld.
-			((ServerWorld) world).spawnParticle(
-					particleData, x, y, z, 1, xOffset, yOffset, zOffset, 0.0
-			);
-		} else {
-			world.addParticle(particleData, x, y, z, xOffset, yOffset, zOffset);
-		}
-	}
+    @Redirect(method = "livingTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle" +
+            "(Lnet/minecraft/particles/IParticleData;DDDDDD)V"))
+    private void addParticle(Level world, IParticleData particleData, double x, double y, double z, double xOffset, double yOffset, double zOffset) {
+        if (!world.isClientSide && RandomPatches.config().misc.bugFixes.fixAnimalBreedingHearts) {
+            ((ServerLevel) world).addParticle(particleData, x, y, z, 1, xOffset, yOffset, zOffset, 0.0);
+        } else {
+            world.addParticle(particleData, x, y, z, xOffset, yOffset, zOffset);
+        }
+    }
 }
+*/

@@ -24,25 +24,20 @@
 package com.therandomlabs.randompatches.mixin.client.packetsizelimits;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.network.play.client.CCustomPayloadPacket;
+import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(CCustomPayloadPacket.class)
+@Mixin(ClientboundCustomPayloadPacket.class)
 public final class CCustomPayloadPacketMixin {
-	@ModifyConstant(method = "readPacketData", constant = @Constant(intValue = Short.MAX_VALUE))
+	@ModifyConstant(method = "getData", constant = @Constant(intValue = Short.MAX_VALUE))
 	private int getMaxClientCustomPayloadPacketSize(int size) {
 		return RandomPatches.config().packetSizeLimits.maxClientCustomPayloadPacketSize;
 	}
 
-	@ModifyConstant(
-			method = "readPacketData", constant = @Constant(
-					stringValue = "Payload may not be larger than " + Short.MAX_VALUE + " bytes"
-			)
-	)
+	@ModifyConstant(method = "getData", constant = @Constant(stringValue = "Payload may not be larger than " + Short.MAX_VALUE + " bytes"))
 	private String getPayloadTooLargeErrorMessage(String message) {
-		return "Payload may not be larger than " +
-				RandomPatches.config().packetSizeLimits.maxClientCustomPayloadPacketSize + " bytes";
+		return "Payload may not be larger than " + RandomPatches.config().packetSizeLimits.maxClientCustomPayloadPacketSize + " bytes";
 	}
 }

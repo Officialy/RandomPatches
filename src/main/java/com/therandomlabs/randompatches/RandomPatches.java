@@ -28,7 +28,9 @@ import com.therandomlabs.randompatches.client.RPContributorCapeHandler;
 import com.therandomlabs.randompatches.client.RPKeyBindingHandler;
 import com.therandomlabs.randompatches.command.RPConfigReloadCommand;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.ConfigSerializer;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -61,12 +63,13 @@ public final class RandomPatches {
 	/**
 	 * Constructs a {@link RandomPatches} instance.
 	 */
-	public RandomPatches() {
+	public RandomPatches() throws ConfigSerializer.SerializationException {
 		if (ModList.get().isLoaded("cloth-config")) {
-			ModLoadingContext.get().registerExtensionPoint(
-					ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, screen) -> AutoConfig.getConfigScreen(RPConfig.class, screen).get()
-			);
+//	todo		ModLoadingContext.get().registerExtensionPoint(
+//					ConfigGuiHandler.getGuiFactoryFor((screen) -> AutoConfig.getConfigScreen(RPConfig.class, screen).get())
+//			);
 		}
+		AutoConfig.register(RPConfig.class, Toml4jConfigSerializer::new);
 
 		CauldronWaterTranslucencyHandler.enable();
 		RPKeyBindingHandler.enable();
@@ -97,14 +100,14 @@ public final class RandomPatches {
 	/**
 	 * Reloads the RandomPatches configuration from disk.
 	 */
-	public static void reloadConfig() {
+	public static void reloadConfig()  {
 		if (serializer == null) {
 			AutoConfig.register(RPConfig.class, (definition, configClass) -> {
 				serializer = new Toml4jConfigSerializer<>(definition, configClass);
 				return serializer;
 			});
 		} else {
-			serializer.reloadFromDisk();
+			serializer.createDefault(); //was reloadFromDisk
 		}
 	}
 }

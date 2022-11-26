@@ -24,9 +24,9 @@
 package com.therandomlabs.randompatches.mixin.timeouts;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.network.login.ServerLoginNetHandler;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,26 +34,25 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ServerLoginNetHandler.class)
+@Mixin(ServerLoginPacketListenerImpl.class)
 public final class ServerLoginNetHandlerMixin {
 	@Shadow
-	private int connectionTimer;
+	private int tick;
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void tick(CallbackInfo info) {
-		if (connectionTimer >= RandomPatches.config().connectionTimeouts.loginTimeoutTicks) {
-			((ServerLoginNetHandler) (Object) this).disconnect(
-					new TranslationTextComponent("multiplayer.disconnect.slow_login")
+		if (tick >= RandomPatches.config().connectionTimeouts.loginTimeoutTicks) {
+			((ServerLoginPacketListenerImpl) (Object) this).disconnect(
+					new TranslatableComponent("multiplayer.disconnect.slow_login")
 			);
 		}
 	}
 
 	@Redirect(method = "tick", at = @At(
 			value = "INVOKE",
-			target = "net/minecraft/network/login/ServerLoginNetHandler.disconnect" +
-					"(Lnet/minecraft/util/text/ITextComponent;)V"
+			target = "net/minecraft/server/network/ServerLoginPacketListenerImpl.disconnect" + "(Lnet/minecraft/network/chat/Component;)V"
 	))
-	private void disconnect(ServerLoginNetHandler handler, ITextComponent reason) {
+	private void disconnect(ServerLoginPacketListenerImpl handler, Component reason) {
 		//No-op.
 	}
 }

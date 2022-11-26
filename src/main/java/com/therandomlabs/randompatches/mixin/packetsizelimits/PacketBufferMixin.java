@@ -24,14 +24,14 @@
 package com.therandomlabs.randompatches.mixin.packetsizelimits;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(PacketBuffer.class)
+@Mixin(FriendlyByteBuf.class)
 public final class PacketBufferMixin {
-	@ModifyConstant(method = "readCompoundTag", constant = @Constant(longValue = 0x200000L))
+	@ModifyConstant(method = "readNbt()Lnet/minecraft/nbt/CompoundTag;", constant = @Constant(longValue = 0x200000L))
 	private long getMaxNBTCompoundTagPacketSize(long size) {
 		return RandomPatches.config().packetSizeLimits.maxNBTCompoundTagPacketSize;
 	}

@@ -19,14 +19,13 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin.datafixerupper;
 
+import net.minecraft.SharedConstants;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.SharedConstants;
-import net.minecraft.world.storage.SaveFormat;
-import net.minecraft.world.storage.WorldSummary;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -56,3 +55,4 @@ public final class MinecraftServerMixin {
 		return false;
 	}
 }
+*/

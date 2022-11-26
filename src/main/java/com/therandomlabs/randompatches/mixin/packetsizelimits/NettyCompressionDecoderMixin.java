@@ -24,12 +24,12 @@
 package com.therandomlabs.randompatches.mixin.packetsizelimits;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.network.NettyCompressionDecoder;
+import net.minecraft.network.CompressionDecoder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(NettyCompressionDecoder.class)
+@Mixin(CompressionDecoder.class)
 public final class NettyCompressionDecoderMixin {
 	@ModifyConstant(method = "decode", constant = @Constant(intValue = 0x200000))
 	private int getMaxCompressedPacketSize(int size) {

@@ -19,7 +19,8 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin.client;
 
@@ -38,9 +39,11 @@ public final class BambooBlockMixin extends Block {
 		super(properties);
 	}
 
-	/**
+	*/
+/**
 	 * {@inheritDoc}
-	 */
+	 *//*
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public float getAmbientOcclusionLightValue(
@@ -52,3 +55,4 @@ public final class BambooBlockMixin extends Block {
 		return 1.0F;
 	}
 }
+*/

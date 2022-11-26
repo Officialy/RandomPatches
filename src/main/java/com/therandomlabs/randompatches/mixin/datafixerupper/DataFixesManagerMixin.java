@@ -19,13 +19,13 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin.datafixerupper;
 
 import com.mojang.datafixers.DataFixer;
 import com.therandomlabs.randompatches.util.FakeDataFixer;
-import net.minecraft.util.datafix.DataFixesManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,3 +38,4 @@ public final class DataFixesManagerMixin {
 		info.setReturnValue(new FakeDataFixer());
 	}
 }
+*/

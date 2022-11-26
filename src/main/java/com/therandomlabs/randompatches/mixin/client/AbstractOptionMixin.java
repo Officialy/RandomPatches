@@ -24,14 +24,13 @@
 package com.therandomlabs.randompatches.mixin.client;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.client.AbstractOption;
+import net.minecraft.client.Option;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(AbstractOption.class)
+@Mixin(Option.class)
 public final class AbstractOptionMixin {
-	@SuppressWarnings("UnresolvedMixinReference")
 	@ModifyConstant(method = "<clinit>", constant = @Constant(floatValue = 10.0F))
 	private static float getFramerateLimitSliderStepSize(float stepSize) {
 		return RandomPatches.config().client.framerateLimitSliderStepSize;

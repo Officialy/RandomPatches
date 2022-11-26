@@ -498,7 +498,7 @@ public final class RPConfig implements ConfigData {
                 "bindings."+
         "- ClientPlayNetHandler: Required for making the dismount overlay message show " +
                 "the correct key when the dismount key binding is enabled."+
-        "- CompoundNBT: Required for fixing player head stacking."+
+        "- CompoundTag: Required for fixing player head stacking."+
         "- EnchantedBookItem: Required for removing the glowing effect from enchanted " +
                 "books."+
         "- EndPortalTileEntityRenderer: Required for fixing end portal rendering."+

@@ -38,9 +38,9 @@ import com.mojang.authlib.yggdrasil.response.MinecraftTexturesPayload;
 import com.mojang.util.UUIDTypeAdapter;
 import com.therandomlabs.randompatches.RPConfig;
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.NBTUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraftforge.registries.tags.ITag;
 import org.apache.commons.codec.binary.Base64;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,7 +48,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(CompoundNBT.class)
+@Mixin(CompoundTag.class)
 public final class CompoundNBTMixin {
 	@Unique
 	private static final Gson gson =
@@ -71,20 +71,20 @@ public final class CompoundNBTMixin {
 			return true;
 		}
 
-		final INBT skullOwner1 = ((Map<String, INBT>) object1).get("SkullOwner");
+		final ITag skullOwner1 = ((Map<String, ITag>) object1).get("SkullOwner");
 
-		if (!(skullOwner1 instanceof CompoundNBT)) {
+		if (!(skullOwner1 instanceof CompoundTag)) {
 			return false;
 		}
 
-		final INBT skullOwner2 = ((Map<String, INBT>) object2).get("SkullOwner");
+		final ITag skullOwner2 = ((Map<String, ITag>) object2).get("SkullOwner");
 
-		if (!(skullOwner2 instanceof CompoundNBT)) {
+		if (!(skullOwner2 instanceof CompoundTag)) {
 			return false;
 		}
 
-		final GameProfile profile1 = NBTUtil.readGameProfile((CompoundNBT) skullOwner1);
-		final GameProfile profile2 = NBTUtil.readGameProfile((CompoundNBT) skullOwner2);
+		final GameProfile profile1 = NbtUtils.readGameProfile((CompoundTag) skullOwner1);
+		final GameProfile profile2 = NbtUtils.readGameProfile((CompoundTag) skullOwner2);
 
 		if (profile1 == null || !profile1.equals(profile2)) {
 			return false;

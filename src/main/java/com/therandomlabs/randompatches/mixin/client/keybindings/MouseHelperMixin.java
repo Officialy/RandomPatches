@@ -19,12 +19,12 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin.client.keybindings;
 
 import com.therandomlabs.randompatches.client.RPKeyBindingHandler;
-import net.minecraft.client.MouseHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -44,3 +44,4 @@ public final class MouseHelperMixin {
 		RPKeyBindingHandler.KeyBindings.onKeyEvent(button, action, Integer.MIN_VALUE);
 	}
 }
+*/

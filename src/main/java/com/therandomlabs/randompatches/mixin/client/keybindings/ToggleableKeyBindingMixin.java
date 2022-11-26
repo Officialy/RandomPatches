@@ -19,16 +19,16 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin.client.keybindings;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.therandomlabs.randompatches.RandomPatches;
 import com.therandomlabs.randompatches.client.RPKeyBindingHandler;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.settings.ToggleableKeyBinding;
-import net.minecraft.client.util.InputMappings;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,18 +39,14 @@ public final class ToggleableKeyBindingMixin {
 	@SuppressWarnings("ConstantConditions")
 	@Inject(method = "isKeyDown", at = @At("RETURN"), cancellable = true)
 	private void isKeyDown(CallbackInfoReturnable<Boolean> info) {
-		final KeyBinding sprint = Minecraft.getInstance().gameSettings.keyBindSprint;
+		final KeyMapping sprint = Minecraft.getInstance().options.keySprint;
 
 		if ((Object) this != sprint || info.getReturnValue() ||
 				!RandomPatches.config().client.keyBindings.secondarySprint()) {
 			return;
 		}
-
-		final InputMappings.Input forwardKey =
-				Minecraft.getInstance().gameSettings.keyBindForward.getKey();
-		info.setReturnValue(
-				!RPKeyBindingHandler.KeyBindings.SECONDARY_SPRINT.getKey().equals(forwardKey) &&
-						RPKeyBindingHandler.KeyBindings.SECONDARY_SPRINT.isKeyDown()
-		);
+		final InputConstants.Key forwardKey = Minecraft.getInstance().options.keyUp.getKey();
+		info.setReturnValue(!RPKeyBindingHandler.KeyBindings.SECONDARY_SPRINT.getKey().equals(forwardKey) && RPKeyBindingHandler.KeyBindings.SECONDARY_SPRINT.isDown());
 	}
 }
+*/

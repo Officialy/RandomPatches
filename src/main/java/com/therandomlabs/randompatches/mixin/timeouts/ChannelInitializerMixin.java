@@ -19,7 +19,8 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin.timeouts;
 
@@ -33,11 +34,9 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 		"net/minecraft/network/NetworkSystem$1"
 })
 public final class ChannelInitializerMixin {
-	@ModifyArg(method = "initChannel(Lio/netty/channel/Channel;)V", at = @At(
-			value = "INVOKE",
-			target = "io/netty/handler/timeout/ReadTimeoutHandler.<init>(I)V"
-	))
+	@ModifyArg(method = "initChannel(Lio/netty/channel/Channel;)V", at = @At(value = "INVOKE", target = "io/netty/handler/timeout/ReadTimeoutHandler.<init>(I)V"))
 	private int getReadTimeout(int timeout) {
 		return RandomPatches.config().connectionTimeouts.readTimeoutSeconds;
 	}
 }
+*/

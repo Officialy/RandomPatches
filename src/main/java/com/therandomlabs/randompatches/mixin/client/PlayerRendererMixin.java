@@ -19,24 +19,22 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin.client;
-
-import net.minecraft.client.renderer.entity.PlayerRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(PlayerRenderer.class)
 public final class PlayerRendererMixin {
-	@Redirect(method = "setupTransforms", at = @At(
-			value = "INVOKE",
-			target = "java/lang/Math.acos(D)D"
-	))
+	@Redirect(method = "setupTransforms", at = @At(value = "INVOKE", target = "java/lang/Math.acos(D)D"))
 	private double acos(double a) {
 		//Sometimes, Math#acos(double) is called with a value larger than 1.0, which results in
 		//a rotation angle of NaN, thus causing the player model to disappear.
 		return Math.acos(Math.min(a, 1.0));
 	}
 }
+*/

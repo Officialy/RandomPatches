@@ -27,6 +27,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.therandomlabs.randompatches.RandomPatches;
+import me.shedaniel.autoconfig.serializer.ConfigSerializer;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.TextComponent;
@@ -49,12 +50,18 @@ public final class RPConfigReloadCommand {
 			dispatcher.register(
 					LiteralArgumentBuilder.<CommandSourceStack>literal(name).
 							requires(source -> source.hasPermission(4)).
-							executes(context -> execute(context.getSource()))
+							executes(context -> {
+								try {
+									return execute(context.getSource());
+								} catch (ConfigSerializer.SerializationException e) {
+									throw new RuntimeException(e);
+								}
+							})
 			);
 		}
 	}
 
-	private static int execute(CommandSourceStack source) {
+	private static int execute(CommandSourceStack source) throws ConfigSerializer.SerializationException {
 		RandomPatches.reloadConfig();
 		source.sendSuccess(new TextComponent("RandomPatches configuration reloaded!"), true);
 		return Command.SINGLE_SUCCESS;

@@ -24,9 +24,10 @@
 package com.therandomlabs.randompatches.mixin.timeouts;
 
 import com.therandomlabs.randompatches.RandomPatches;
-import net.minecraft.network.play.ServerPlayNetHandler;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,22 +35,20 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(ServerPlayNetHandler.class)
+@Mixin(ServerGamePacketListenerImpl.class)
 public final class ServerPlayNetHandlerKeepAliveMixin {
 	@Shadow
 	private long keepAliveTime;
 
 	@Redirect(method = "tick", at = @At(
 			value = "INVOKE",
-			target = "net/minecraft/network/play/ServerPlayNetHandler.disconnect" +
-					"(Lnet/minecraft/util/text/ITextComponent;)V",
+			target = "net/minecraft/server/network/ServerGamePacketListenerImpl.disconnect" + "(Lnet/minecraft/network/chat/Component;)V",
 			ordinal = 2
 	))
-	private void disconnect(ServerPlayNetHandler handler, ITextComponent reason) {
-		final long keepAliveTimeoutMillis =
-				RandomPatches.config().connectionTimeouts.keepAliveTimeoutSeconds * 1000L;
+	private void disconnect(ServerGamePacketListenerImpl handler, Component reason) {
+		final long keepAliveTimeoutMillis = RandomPatches.config().connectionTimeouts.keepAliveTimeoutSeconds * 1000L;
 
-		if (Util.milliTime() - keepAliveTime >= keepAliveTimeoutMillis) {
+		if (Util.getMillis() - keepAliveTime >= keepAliveTimeoutMillis) {
 			handler.disconnect(reason);
 		}
 	}
