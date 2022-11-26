@@ -64,8 +64,7 @@ public final class RandomPatches {
 	public RandomPatches() {
 		if (ModList.get().isLoaded("cloth-config")) {
 			ModLoadingContext.get().registerExtensionPoint(
-					ExtensionPoint.CONFIGGUIFACTORY,
-					() -> (mc, screen) -> AutoConfig.getConfigScreen(RPConfig.class, screen).get()
+					ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, screen) -> AutoConfig.getConfigScreen(RPConfig.class, screen).get()
 			);
 		}
 

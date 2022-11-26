@@ -31,7 +31,10 @@ import com.therandomlabs.randompatches.RandomPatches;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Option;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.SimpleOptionsSubScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
@@ -98,7 +101,7 @@ public final class RPKeyBindingHandler {
 
 		/**
 		 * Handles key events. This should only be called by
-		 * {@link com.therandomlabs.randompatches.mixin.client.keybindings.KeyboardListenerMixin}
+		 * {/todo @link com.therandomlabs.randompatches.mixin.client.keybindings.KeyboardListenerMixin}
 		 * and {@link com.therandomlabs.randompatches.mixin.client.keybindings.MouseHelperMixin}.
 		 *
 		 * @param key the key.
@@ -114,17 +117,17 @@ public final class RPKeyBindingHandler {
 					matches(TOGGLE_NARRATOR, key, scanCode)) {
 				Option.NARRATOR.createButton(mc.options, 1, 1, 1); //todo other two ints
 
-				if (mc.screen instanceof WithNarratorSettingsScreen) {
-					((WithNarratorSettingsScreen) mc.screen).updateNarratorButtonText();
+				if (mc.screen instanceof SimpleOptionsSubScreen) {
+					((SimpleOptionsSubScreen) mc.screen).updateNarratorButton();
 				}
 			}
 
 			if (config.pause && action != GLFW.GLFW_RELEASE && matches(PAUSE, key, scanCode)) {
 				if (mc.screen == null) {
-					mc.displayInGameMenu(InputConstants.isKeyDown(
-							mc.getWindow().getHandle(), GLFW.GLFW_KEY_F3
+					mc.pauseGame(InputConstants.isKeyDown(
+							mc.getWindow().getWindow(), GLFW.GLFW_KEY_F3
 					));
-				} else if (mc.screen instanceof IngameMenuScreen) {
+				} else if (mc.screen instanceof PauseScreen) {
 					mc.screen.onClose();
 				}
 			}
@@ -138,12 +141,12 @@ public final class RPKeyBindingHandler {
 				mc.options.hideGui = !mc.options.hideGui;
 			}
 
-			if (config.toggleDebugInfo && action == GLFW.GLFW_RELEASE &&
+			/*if (config.toggleDebugInfo && action == GLFW.GLFW_RELEASE &&
 					matches(TOGGLE_DEBUG_INFO, key, scanCode)) {
 				if (TOGGLE_DEBUG_INFO.getKey().getType() == InputConstants.Type.KEYSYM &&
-						TOGGLE_DEBUG_INFO.getKey().getKeyCode() == GLFW.GLFW_KEY_F3 &&
-						mc.keyboardListener.actionKeyF3) {
-					mc.keyboardListener.actionKeyF3 = false;
+						TOGGLE_DEBUG_INFO.getKey().getValue() == GLFW.GLFW_KEY_F3 &&
+						mc.keyboardlistener.actionKeyF3) {
+					mc.keyboardlistener.actionKeyF3 = false;
 				} else {
 					mc.options.renderDebug = !mc.options.renderDebug;
 					mc.options.renderDebugCharts =
@@ -151,12 +154,12 @@ public final class RPKeyBindingHandler {
 					mc.options.renderFpsChart =
 							mc.options.renderDebug && Screen.hasAltDown();
 				}
-			}
+			}*/
 		}
 
 		private static boolean matches(KeyMapping keyBinding, int key, int scanCode) {
 			return scanCode == Integer.MIN_VALUE ?
-					keyBinding.matchesMouseKey(key) : keyBinding.matchesKey(key, scanCode);
+					keyBinding.matchesMouse(key) : keyBinding.matches(key, scanCode);
 		}
 
 		private static void register() {
@@ -176,16 +179,16 @@ public final class RPKeyBindingHandler {
 
 		private static void register(KeyMapping keyBinding, boolean enabled) {
 			if (enabled) {
-				if (!ArrayUtils.contains(mc.options.keyBindings, keyBinding)) {
-					mc.options.keyBindings =
-							ArrayUtils.add(mc.options.keyBindings, keyBinding);
+				if (!ArrayUtils.contains(mc.options.keyMappings, keyBinding)) {
+					mc.options.keyMappings =
+							ArrayUtils.add(mc.options.keyMappings, keyBinding);
 				}
 			} else {
-				final int index = ArrayUtils.indexOf(mc.options.keyBindings, keyBinding);
+				final int index = ArrayUtils.indexOf(mc.options.keyMappings, keyBinding);
 
 				if (index != ArrayUtils.INDEX_NOT_FOUND) {
-					mc.options.keyBindings =
-							ArrayUtils.remove(mc.options.keyBindings, index);
+					mc.options.keyMappings =
+							ArrayUtils.remove(mc.options.keyMappings, index);
 				}
 			}
 		}
@@ -198,8 +201,8 @@ public final class RPKeyBindingHandler {
 		@Override
 		public boolean isActive() {
 			final Screen screen = KeyBindings.mc.screen;
-			return screen == null || !(screen.getFocused() instanceof TextFieldWidget) ||
-					!((TextFieldWidget) screen.getFocused()).func_212955_f();
+			return screen == null || !(screen.getFocused() instanceof EditBox) ||
+					!((EditBox) screen.getFocused()).canConsumeInput();
 		}
 
 		@Override

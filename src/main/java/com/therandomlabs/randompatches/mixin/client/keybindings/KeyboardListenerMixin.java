@@ -19,13 +19,14 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+ *//*
+
 
 package com.therandomlabs.randompatches.mixin.client.keybindings;
 
 import com.therandomlabs.randompatches.RandomPatches;
 import com.therandomlabs.randompatches.client.RPKeyBindingHandler;
-import net.minecraft.client.KeyboardListener;
+import net.minecraft.client.KeyboardHandler;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(KeyboardListener.class)
+@Mixin(KeyboardHandler.class)
 public abstract class KeyboardListenerMixin {
 	@Inject(method = "onKeyEvent", at = @At(
 			value = "INVOKE",
@@ -81,3 +82,4 @@ public abstract class KeyboardListenerMixin {
 		return RandomPatches.config().client.keyBindings.toggleDebugInfo ? Integer.MIN_VALUE : key;
 	}
 }
+*/
