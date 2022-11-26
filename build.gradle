@@ -101,7 +101,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'antiblock', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'randompatches', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 antiblock {
@@ -131,12 +131,12 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "antiblock",
-                "Specification-Vendor"    : "Officialy",
+                "Specification-Title"     : "randompatches",
+                "Specification-Vendor"    : "TheRandomLabs",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "Officialy",
+                "Implementation-Vendor"   : "TheRandomLabs",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
