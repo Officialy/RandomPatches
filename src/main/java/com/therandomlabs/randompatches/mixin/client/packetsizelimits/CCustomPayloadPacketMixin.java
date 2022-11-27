@@ -31,12 +31,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ClientboundCustomPayloadPacket.class)
 public final class CCustomPayloadPacketMixin {
-	@ModifyConstant(method = "getData", constant = @Constant(intValue = Short.MAX_VALUE))
+	@ModifyConstant(method = "<init>(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/network/FriendlyByteBuf;)V", constant = @Constant(intValue = 1048576))
 	private int getMaxClientCustomPayloadPacketSize(int size) {
 		return RandomPatches.config().packetSizeLimits.maxClientCustomPayloadPacketSize;
 	}
 
-	@ModifyConstant(method = "getData", constant = @Constant(stringValue = "Payload may not be larger than " + Short.MAX_VALUE + " bytes"))
+	@ModifyConstant(method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V", constant = @Constant(stringValue = "Payload may not be larger than " + 1048576 + " bytes"))
 	private String getPayloadTooLargeErrorMessage(String message) {
 		return "Payload may not be larger than " + RandomPatches.config().packetSizeLimits.maxClientCustomPayloadPacketSize + " bytes";
 	}

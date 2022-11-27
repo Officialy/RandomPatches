@@ -30,6 +30,7 @@ import com.therandomlabs.randompatches.command.RPConfigReloadCommand;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.ConfigSerializer;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
+import me.shedaniel.clothconfig2.ClothConfigDemo;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,67 +47,67 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @Mod.EventBusSubscriber
 @Mod(RandomPatches.MOD_ID)
 public final class RandomPatches {
-	/**
-	 * The RandomPatches mod ID.
-	 */
-	public static final String MOD_ID = "randompatches";
+    /**
+     * The RandomPatches mod ID.
+     */
+    public static final String MOD_ID = "randompatches";
 
-	/**
-	 * The RandomPatches logger. This should only be used by RandomPatches.
-	 */
-	public static final Logger logger = LogManager.getLogger(MOD_ID);
+    /**
+     * The RandomPatches logger. This should only be used by RandomPatches.
+     */
+    public static final Logger logger = LogManager.getLogger(MOD_ID);
 
-	@SuppressWarnings("PMD.NonThreadSafesingleton")
-	@Nullable
-	private static Toml4jConfigSerializer<RPConfig> serializer;
+    @SuppressWarnings("PMD.NonThreadSafesingleton")
+    @Nullable
+    private static Toml4jConfigSerializer<RPConfig> serializer;
 
-	/**
-	 * Constructs a {@link RandomPatches} instance.
-	 */
-	public RandomPatches() throws ConfigSerializer.SerializationException {
-		if (ModList.get().isLoaded("cloth-config")) {
-//	todo		ModLoadingContext.get().registerExtensionPoint(
-//					ConfigGuiHandler.getGuiFactoryFor((screen) -> AutoConfig.getConfigScreen(RPConfig.class, screen).get())
-//			);
-		}
+    /**
+     * Constructs a {@link RandomPatches} instance.
+     */
+    public RandomPatches() {
+//        if (ModList.get().isLoaded("cloth-config")) {
+//            ModLoadingContext.get().registerExtensionPoint(
+//                    ConfigGuiHandler.getGuiFactoryFor((screen) -> AutoConfig.getConfigScreen(RPConfig.class, screen).get())
+//            );
+//        }
 
-		CauldronWaterTranslucencyHandler.enable();
-		RPKeyBindingHandler.enable();
+        CauldronWaterTranslucencyHandler.enable();
+        RPKeyBindingHandler.enable();
 
-		if (RandomPatches.config().client.contributorCapes) {
-			RPContributorCapeHandler.downloadContributorList();
-		}
-	}
+        if (RandomPatches.config().client.contributorCapes) {
+            RPContributorCapeHandler.downloadContributorList();
+        }
+    }
 
-	@SubscribeEvent
-	public static void registerCommands(RegisterCommandsEvent event) {
-		RPConfigReloadCommand.register(event.getDispatcher());
-	}
+    @SubscribeEvent
+    public static void registerCommands(RegisterCommandsEvent event) {
+        RPConfigReloadCommand.register(event.getDispatcher());
+    }
 
-	/**
-	 * Returns the RandomPatches configuration.
-	 *
-	 * @return an {@link RPConfig} object.
-	 */
-	public static RPConfig config() {
-		if (serializer == null) {
-			reloadConfig();
-		}
+    /**
+     * Returns the RandomPatches configuration.
+     *
+     * @return an {@link RPConfig} object.
+     */
+    public static RPConfig config() {
+        if (serializer == null) {
+            reloadConfig();
+        }
 
-		return serializer.createDefault(); //could be deserialize
-	}
+        return serializer.createDefault(); //could be deserialize
+    }
 
-	/**
-	 * Reloads the RandomPatches configuration from disk.
-	 */
-	public static void reloadConfig()  {
-		if (serializer == null) {
-			AutoConfig.register(RPConfig.class, (definition, configClass) -> {
-				serializer = new Toml4jConfigSerializer<>(definition, configClass);
-				return serializer;
-			});
-		} else {
-			serializer.createDefault(); //was reloadFromDisk
-		}
-	}
+    /**
+     * Reloads the RandomPatches configuration from disk.
+     */
+    public static void reloadConfig() {
+        if (serializer == null) {
+            AutoConfig.register(RPConfig.class, (definition, configClass) -> {
+                serializer = new Toml4jConfigSerializer<>(definition, configClass);
+                return serializer;
+            });
+        } else {
+            serializer.createDefault(); //was reloadFromDisk
+        }
+    }
 }

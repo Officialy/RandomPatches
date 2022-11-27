@@ -51,14 +51,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(CompoundTag.class)
 public final class CompoundNBTMixin {
 	@Unique
-	private static final Gson gson =
-			new GsonBuilder().registerTypeAdapter(UUID.class, new UUIDTypeAdapter()).create();
+	private static final Gson gson = new GsonBuilder().registerTypeAdapter(UUID.class, new UUIDTypeAdapter()).create();
 
 	@SuppressWarnings("unchecked")
-	@Redirect(method = "equals", at = @At(
-			value = "INVOKE",
-			target = "java/util/Objects.equals(Ljava/lang/Object;Ljava/lang/Object;)Z"
-	))
+	@Redirect(method = "equals", at = @At(value = "INVOKE", target = "java/util/Objects.equals(Ljava/lang/Object;Ljava/lang/Object;)Z"))
 	private boolean areTagMapsEqual(Object object1, Object object2) {
 		final RPConfig.PlayerHeadStackingFixMode mode =
 				RandomPatches.config().misc.bugFixes.fixPlayerHeadStacking;

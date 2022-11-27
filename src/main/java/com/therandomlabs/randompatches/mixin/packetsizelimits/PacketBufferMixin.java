@@ -31,8 +31,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(FriendlyByteBuf.class)
 public final class PacketBufferMixin {
-	@ModifyConstant(method = "readNbt()Lnet/minecraft/nbt/CompoundTag;", constant = @Constant(longValue = 0x200000L))
-	private long getMaxNBTCompoundTagPacketSize(long size) {
-		return RandomPatches.config().packetSizeLimits.maxNBTCompoundTagPacketSize;
-	}
+    @ModifyConstant(method = "readNbt()Lnet/minecraft/nbt/CompoundTag;", constant = @Constant(longValue = 2097152L))
+    private long getMaxNBTCompoundTagPacketSize(long size) {
+        return RandomPatches.config().packetSizeLimits.maxNBTCompoundTagPacketSize;
+    }
 }

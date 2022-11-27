@@ -14,13 +14,14 @@ apply plugin: 'org.spongepowered.mixin'
 
 group = 'com.therandomlabs.randompatches'
 version = '3.4.4-forge' //bump major version for 1.18 release
-archivesBaseName = 'randompatches'
 
 java {
+    archivesBaseName = 'randompatches'
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
 mixin {
+    add sourceSets.main, "randompatches.refmap.json"
     config 'randompatches.mixins.json'
 }
 
