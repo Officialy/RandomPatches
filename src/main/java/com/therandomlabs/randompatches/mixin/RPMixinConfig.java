@@ -36,67 +36,67 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
  * The RandomPatches mixin config plugin.
  */
 public final class RPMixinConfig implements IMixinConfigPlugin {
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void onLoad(String mixinPackage) {
-		//No-op.
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onLoad(String mixinPackage) {
+        //No-op.
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Nullable
-	@Override
-	public String getRefMapperConfig() {
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Nullable
+    @Override
+    public String getRefMapperConfig() {
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		return RandomPatches.config().misc.isMixinClassEnabled(mixinClassName);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        return RandomPatches.config().misc.isMixinClassEnabled(mixinClassName);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
-		//No-op.
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
+        //No-op.
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Nullable
-	@Override
-	public List<String> getMixins() {
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Nullable
+    @Override
+    public List<String> getMixins() {
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void preApply(
-			String targetClassName, ClassNode targetClass, String mixinClassName,
-			IMixinInfo mixinInfo
-	) {
-		//No-op.
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void preApply(
+            String targetClassName, ClassNode targetClass, String mixinClassName,
+            IMixinInfo mixinInfo
+    ) {
+        //No-op.
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void postApply(
-			String targetClassName, ClassNode targetClass, String mixinClassName,
-			IMixinInfo mixinInfo
-	) {
-		//No-op.
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void postApply(
+            String targetClassName, ClassNode targetClass, String mixinClassName,
+            IMixinInfo mixinInfo
+    ) {
+        //No-op.
+    }
 }

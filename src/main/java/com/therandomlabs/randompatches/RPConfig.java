@@ -417,12 +417,12 @@ public final class RPConfig implements ConfigData {
         public int maxNBTCompoundTagPacketSize = 0x1000000;
 
         @SpecIntInRange(min = 0x100, max = Integer.MAX_VALUE)
-        @Comment("The maximum client custom payload packet size."+
-        "The vanilla limit is " + Short.MAX_VALUE + "."+
+        @Comment("The maximum client & server custom payload packet size."+
+        "The vanilla limit is " + 1048576 + "."+
         "Setting this to a higher value than the vanilla limit may prevent the client " +
                 "from being disconnected.")
         @ConfigEntry.Gui.Tooltip
-        public int maxClientCustomPayloadPacketSize = 0x1000000;
+        public int maxCustomPayloadPacketSize = 0x1000000;
     }
 
     public static final class PlayerSpeedLimits {

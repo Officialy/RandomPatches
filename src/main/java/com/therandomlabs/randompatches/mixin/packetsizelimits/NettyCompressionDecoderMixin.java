@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(CompressionDecoder.class)
 public final class NettyCompressionDecoderMixin {
-	@ModifyConstant(method = "decode", constant = @Constant(intValue = 0x200000))
+	@ModifyConstant(method = "decode", constant = @Constant(intValue = 8388608))
 	private int getMaxCompressedPacketSize(int size) {
 		return RandomPatches.config().packetSizeLimits.maxCompressedPacketSize;
 	}
